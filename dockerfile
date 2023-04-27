@@ -82,6 +82,7 @@ RUN echo '*  *  *  *  * /usr/local/bin/php  /var/www/artisan schedule:run >> /de
 ADD master.ini /etc/supervisor.d/
 ADD default.conf /etc/nginx/conf.d/
 ADD nginx.conf /etc/nginx/
+RUN chown -R www-data:www-data /var/lib/nginx
 
 # Remove Build Dependencies
 RUN apk del -f .build-deps
