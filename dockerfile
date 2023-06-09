@@ -29,7 +29,7 @@ RUN apk add --no-cache --virtual .build-deps  \
     enchant2-dev \
     openldap-dev \
     freetds-dev \
-    aspell-dev \
+    #aspell-dev \
     libxslt-dev 
 
 # Add Production Dependencies
@@ -54,11 +54,7 @@ RUN apk add --update --no-cache --virtual \
     jpegoptim \
     pngquant \
     optipng \
-    freetype-dev \
-    curl \
-    nginx \
-    supervisor \
-    nano
+    freetype-dev 
 
 # Configure & Install Extension
 RUN docker-php-ext-configure \
@@ -83,12 +79,12 @@ RUN docker-php-ext-configure \
     gettext \
     imap \
     soap \
-    dba \
+    #dba \
     enchant \
     ffi \
     ldap \
     pdo_dblib \
-    pspell \
+    #pspell \
     shmop \
     sysvmsg \
     sysvsem \
