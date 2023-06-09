@@ -27,14 +27,10 @@ RUN apk add --no-cache --virtual .build-deps  \
     krb5-dev \
     icu-dev \
     enchant2-dev \
-    gmp-dev \
     openldap-dev \
     freetds-dev \
     aspell-dev \
-    net-snmp-dev \
-    tidyhtml-dev \
-    libxslt-dev \
-    postgresql-dev
+    libxslt-dev 
 
 # Add Production Dependencies
 RUN apk add --update --no-cache --virtual \
@@ -90,20 +86,14 @@ RUN docker-php-ext-configure \
     dba \
     enchant \
     ffi \
-    gmp \
     ldap \
     pdo_dblib \
     pspell \
-    pdo_pgsql \
-    pgsql \
     shmop \
-    snmp \
     sysvmsg \
     sysvsem \
     sysvshm \
-    tidy \
     xsl \
-    zend_test \
     sockets
 
 
@@ -120,8 +110,7 @@ RUN php -m
 
 
 # Add Composer
-RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
-#RUN composer global require hirak/prestissimo
+COPY --from=composer:2.5.4 /usr/bin/composer /usr/local/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="./vendor/bin:$PATH"
 
