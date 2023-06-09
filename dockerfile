@@ -10,6 +10,8 @@ RUN rm -f /etc/apk/repositories &&\
     echo "http://dl-cdn.alpinelinux.org/alpine/v3.17/main" >> /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/v3.17/community" >> /etc/apk/repositories
 
+RUN export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+
 # Add Build Dependencies
 RUN apk add --no-cache --virtual .build-deps  \
     zlib-dev \
@@ -17,8 +19,22 @@ RUN apk add --no-cache --virtual .build-deps  \
     libpng-dev \
     libxml2-dev \
     bzip2-dev \
-    libzip-dev
-
+    libzip-dev \
+    icu-dev \
+    gettext \
+    gettext-dev \
+    imap-dev \
+    krb5-dev \
+    icu-dev \
+    enchant2-dev \
+    gmp-dev \
+    openldap-dev \
+    freetds-dev \
+    aspell-dev \
+    net-snmp-dev \
+    tidyhtml-dev \
+    libxslt-dev \
+    postgresql-dev
 
 # Add Production Dependencies
 RUN apk add --update --no-cache --virtual \
@@ -31,20 +47,21 @@ RUN apk add --update --no-cache --virtual \
     php-zip \
     php-zlib \
     php-pdo \
+    php-bz2 \
     php-tokenizer \
     php-session \
     php-pdo_mysql \
     php-pdo_sqlite \
+    php-calendar \
     mysql-client \
     dcron \
     jpegoptim \
     pngquant \
     optipng \
-    icu-dev \
     freetype-dev \
     curl \
     nginx \
-    supervisor \ 
+    supervisor \
     nano
 
 # Configure & Install Extension
@@ -52,6 +69,7 @@ RUN docker-php-ext-configure \
     opcache --enable-opcache &&\
     docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ && \
     docker-php-ext-configure zip && \
+    docker-php-ext-configure imap && \
     docker-php-ext-install \
     opcache \
     mysqli \
@@ -62,7 +80,40 @@ RUN docker-php-ext-configure \
     xml \
     bz2 \
     pcntl \
-    bcmath
+    bcmath \
+    zip \
+    calendar \
+    exif \
+    gettext \
+    imap \
+    soap \
+    dba \
+    enchant \
+    ffi \
+    gmp \
+    ldap \
+    pdo_dblib \
+    pspell \
+    pdo_pgsql \
+    pgsql \
+    shmop \
+    snmp \
+    sysvmsg \
+    sysvsem \
+    sysvshm \
+    tidy \
+    xsl \
+    zend_test \
+    sockets
+
+
+RUN apk add --no-cache ${PHPIZE_DEPS} imagemagick imagemagick-dev
+RUN pecl install -o -f imagick\
+    &&  docker-php-ext-enable \
+        imagick \
+        soap
+RUN apk del --no-cache ${PHPIZE_DEPS}
+
 
 # Install modules
 RUN php -m
@@ -85,7 +136,7 @@ ADD nginx.conf /etc/nginx/
 RUN chown -R www-data:www-data /var/lib/nginx
 
 # Remove Build Dependencies
-RUN apk del -f .build-deps
+# RUN apk del -f .build-deps
 # Setup Working Dir
 WORKDIR /var/www/html
 
