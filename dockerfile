@@ -114,7 +114,7 @@ COPY opcache.ini $PHP_INI_DIR/conf.d/
 COPY php.ini $PHP_INI_DIR/conf.d/
 
 # Setup Crond and Supervisor by default
-RUN echo '*  *  *  *  * /usr/local/bin/php  /var/www/artisan schedule:run >> /dev/null 2>&1' > /etc/crontabs/root && mkdir /etc/supervisor.d
+RUN echo '* * * * * /usr/local/bin/php  /var/www/artisan schedule:run >> /dev/null 2>&1' > /etc/crontabs/root && mkdir /etc/supervisor.d
 ADD master.ini /etc/supervisor.d/
 ADD default.conf /etc/nginx/conf.d/
 ADD nginx.conf /etc/nginx/
